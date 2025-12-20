@@ -60,7 +60,7 @@ export async function POST(req) {
       if (
         !leadership.school ||
         !leadership.degree ||
-        !leadership.duration
+        !leadership.year
       ) {
         return NextResponse.json(
           { message: "all leadership fields required" },

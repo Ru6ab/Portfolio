@@ -62,9 +62,12 @@ export default function Home() {
         setSkill(skillRes.data.data)
         setInterest(interestRes.data.data)
         setLanguage(langRes.data.data)
+
         console.log("about is:",aboutRes.data.data)
          console.log("pub.. data",pubRes.data.data)
-            console.log("lang data",langRes.data.data)
+         console.log("leadership:", leadRes.data.data)
+                  console.log("award:", awardRes.data.data)
+                     console.log("lang data",langRes.data.data)
       } catch (error) {
         console.error("API fetch error:", error);
       } 

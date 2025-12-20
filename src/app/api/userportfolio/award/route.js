@@ -13,7 +13,7 @@
 //                 return NextResponse.json({message:"add award sections"}, {status:400})
 //             }
 //             for (const award of body){
-//             if(!award.school || !award.degree || !award.duration){
+//             if(!award.school || !award.degree || !award.year){
 //                  return NextResponse.json({ message: "award fields required" }, { status: 400 });
 //             }}
 //             let portfolio = await UserPort.findOne({ userId: user._id })
@@ -60,7 +60,7 @@ export async function POST(req) {
       if (
         !award.school ||
         !award.degree ||
-        !award.duration
+        !award.year
       ) {
         return NextResponse.json(
           { message: "all award fields required" },

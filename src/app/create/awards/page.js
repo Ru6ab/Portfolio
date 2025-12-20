@@ -5,7 +5,7 @@
 // import Leadership from '../../components3/Leadership'
 // export default function page() {
 //     const [degrees, setdegrees] = useState([
-//     { school: "", degree: "", duration: "" }
+//     { school: "", degree: "", year: "" }
 //   ]);
 
 //   const handleChange = (index, e) => {
@@ -16,7 +16,7 @@
 //   };
 
 //   const adddegrees = () => {
-//     setdegrees((prev) => [...prev, { school: "", degree: "", duration: "" }]);
+//     setdegrees((prev) => [...prev, { school: "", degree: "", year: "" }]);
 //   };
 
 //   const removedegrees = (index) => {
@@ -67,14 +67,14 @@
 //                        />
 //                      </div>
        
-//                      {/* Duration */}
+//                      {/* year */}
 //                      <div className="flex flex-col gap-1">
-//                        <label className="font-semibold text-gray-700">Duration</label>
+//                        <label className="font-semibold text-gray-700">year</label>
 //                        <input
 //                          className="w-[450px] border border-gray-300 rounded px-2 py-1 text-sm"
-//                          value={degrees.duration}
+//                          value={degrees.year}
 //                          type="text"
-//                          name="duration"
+//                          name="year"
 //                          onChange={(e) => handleChange(index, e)}
 //                        />
 //                      </div>
@@ -121,11 +121,11 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
-import Leadership from '../../components3/Leadership';
+import LeadershipPage from '../../components3/LeadershipPage';
 
 export default function Page() {
   const [award, setAward] = useState([
-    { school: "", degree: "", duration: "" }
+    { school: "", degree: "", year: "" }
   ]);
 
   const handleChange = (index, e) => {
@@ -136,7 +136,7 @@ export default function Page() {
   };
 
   const addAward = () => {
-    setAward(prev => [...prev, { school: "", degree: "", duration: "" }]);
+    setAward(prev => [...prev, { school: "", degree: "", year: "" }]);
   };
 
   const removeAward = (index) => {
@@ -156,7 +156,7 @@ export default function Page() {
 
   return (
     <div className="pt-16 pl-8 md:pl-16 mb-10" id="degrees">
-      <h1 className="font-bold text-[#04274a] text-[30px] mb-3">Honors & Degrees</h1>
+      <h1 className="font-bold text-[#04274a] text-[30px] mb-3">Honors & Awards</h1>
       <div className="border-b-4 border-blue-500 w-[55px]" />
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6 mt-6 relative">
@@ -189,14 +189,14 @@ export default function Page() {
                 />
               </div>
 
-              {/* Duration */}
+              {/* year */}
               <div className="flex flex-col gap-1">
-                <label className="font-semibold text-gray-700">Duration</label>
+                <label className="font-semibold text-gray-700">year</label>
                 <input
                   className="w-[450px] border border-gray-300 rounded px-2 py-1 text-sm"
-                  value={awrd.duration}
+                  value={awrd.year}
                   type="text"
-                  name="duration"
+                  name="year"
                   onChange={(e) => handleChange(index, e)}
                 />
               </div>
@@ -235,7 +235,7 @@ export default function Page() {
         </button>
       </form>
 
-      <Leadership />
+      <LeadershipPage />
     </div>
   );
 }

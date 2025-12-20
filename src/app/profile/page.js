@@ -28,5 +28,7 @@ export default function page() {
     <div> hello {user.username}, your protected route </div>
     <button onClick={()=>router.push('/create/main')}>go to create portfolio page</button>
     </>
+      
+
   )
 }
