@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import Dashboard from '../components3/Dashboard';
+import Dashboard from '../components/Dashboard';
 
 export default function DesignLayout({ children }) {
   const [openMenu, setOpenMenu] = useState(false);

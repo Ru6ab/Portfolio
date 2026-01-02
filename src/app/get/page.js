@@ -20,7 +20,6 @@ import Interest from '../components/Interest'
 
 export default function Home() {
   const [openMenu, setOpenMenu] = useState(false)
-  // const [sideData,setSideData] = useState(null)
    const [main, setMain] = useState(null);
     const [about, setAbout] = useState(null);
    const [education, setEducation] = useState([]);

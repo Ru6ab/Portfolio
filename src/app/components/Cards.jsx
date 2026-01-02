@@ -45,7 +45,7 @@ export default function PublicationCard({
           name="status"
           value={status}
           onChange={(e) => handleChange(index, e)}
-          className="w-[100px]  bg-blue-900 rounded px-2 py-1 font-semibold focus:outline-none focus:ring-2 focus:ring-gray-300"
+          className="w-[100px]   rounded px-2 py-1 font-semibold focus:outline-none focus:ring-2 focus:ring-gray-300"
         />
       ) : (
         <p className="inline-flex bg-sky-100 py-1 px-3 w-fit font-semibold text-[15px] rounded-[3px]">{status || '-'}</p>

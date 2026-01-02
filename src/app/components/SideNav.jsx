@@ -11,18 +11,31 @@ export default function SideNav() {
   const [active, setActive] = useState("Home");
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const menuItems = [
-    "Home",
-    "About",
-    "Education",
-    "Experience",
-    "Skills",
-    "Projects",
-    "Publications",
-    "Award & Leaderships",
-    "Languages & Interests",
-  ];
+  const [menu,setMenu] = useState([])
+  // const menuItems = [
+  //   "Home",
+  //   "About",
+  //   "Education",
+  //   "Experience",
+  //   "Skills",
+  //   "Projects",
+  //   "Publications",
+  //   "Award & Leaderships",
+  //   "Languages & Interests",
+  // ];
+useEffect(() => {
+  const fetchMenu = async () => {
+    try {
+      const res = await axios.get("/api/userportfolio/menu");
+      setMenu(res.data); // res.data should be the array you showed
+    } catch (err) {
+      console.error("Failed to fetch menu:", err);
+      setMenu([]); // fallback
+    }
+  };
+  fetchMenu();
+}, []);
+  
 
 
   const defaultProfile = {
@@ -129,18 +142,18 @@ export default function SideNav() {
       </div>
 
       {/* Menu */}
-      <ul className="mt-8 flex flex-col justify-start pl-8 gap-[15px] pb-12">
-        {menuItems.map((item) => (
-          <li key={item}>
+      <ul className="mt-8 flex flex-col  h-screen justify-start pl-8 gap-[15px] pb-12">
+        {menu.map((item) => (
+          <li key={item.key}>
             <a
-              href={`#${item}`}
-              onClick={() => setActive(item)}
+              href={`#${item.key}`}
+              onClick={() => setActive(item.key)}
               className={clsx({
                 "text-neutral-400": active !== item,
                 "text-white": active === item,
               })}
             >
-              {item}
+              {item.label}
             </a>
           </li>
         ))}

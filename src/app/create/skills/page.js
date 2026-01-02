@@ -1,58 +1,31 @@
-// import React from 'react'
-// import { FaTimes } from 'react-icons/fa'
-
-// export default function page() {
-//   return (
-//       <div className="pt-16 pl-8 md:pl-16 mb-10" id="Education">
-//       <h1 className="font-bold text-[#04274a] text-[30px] mb-3">Skills</h1>
-//       <div className="border-b-2 border-blue-500 w-[55px]" />
-      
-//       {/* <div className='flex flex-row gap-[px]'>
-//       <div className='pt-8 relative w-[250px]'>
-//         <input className='bg-gray-300 border-gray-300 px-2 py-1 rounded-[4px]  outline-focus:none' placeholder='skill 1'/>
-//         <FaTimes size={12} className='absolute top-8 right-13'/>
-//       </div>
-
-//             <div className='pt-8 relative w-[250px]'>
-//         <input className='bg-gray-300 border-gray-300 px-2 py-1 rounded-[4px]  outline-focus:none' placeholder='skill 1'/>
-//         <FaTimes size={12} className='absolute top-8 right-13'/>
-//       </div>
-//             <div className='pt-8 relative w-[250px]'>
-//         <input className='bg-gray-300 border-gray-300 px-2 py-1 rounded-[4px]  outline-focus:none' placeholder='skill 1'/>
-//         <FaTimes size={12} className='absolute top-8 right-13'/>
-//       </div>
-//       </div> */}
-//       <div className="flex flex-row gap-4"> {/* add gap-x if you want spacing between inputs */}
-//   {[1,2,3].map((_, idx) => (
-//     <div key={idx} className="relative w-[250px]">
-//       <input
-//         className="bg-gray-300 border border-gray-300 px-2 py-1 rounded-[4px] w-full"
-//         placeholder={`Skill ${idx+1}`}
-//       />
-//       <FaTimes
-//         size={12}
-//         className="absolute top-1 right-2 text-gray-700 cursor-pointer"
-//       />
-//     </div>
-//   ))}
-// </div>
-
-//       </div>
-//   )
-// }
-
-'use client'
+"use client";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaTimes, FaPlus } from "react-icons/fa";
 
 export default function SkillInputs() {
-  const [skills, setSkills] = useState([""]); // start with one input
+  const [skills, setSkills] = useState([""]);
+  const [isEdit, setIsEdit] = useState(false);
+
+  // 🔹 Fetch existing skills ON LOAD
+ useEffect(() => {
+  const fetchSkills = async () => {
+    try {
+      const res = await axios.get("/api/userportfolio/skill")
+      setSkills(res.data.data.length ? res.data.data : [""])
+      setIsEdit(res.data.data.length > 0)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  fetchSkills()
+}, [])
+
 
   const handleChange = (index, value) => {
-    const newSkills = [...skills];
-    newSkills[index] = value;
-    setSkills(newSkills);
+    const updated = [...skills];
+    updated[index] = value;
+    setSkills(updated);
   };
 
   const handleRemove = (index) => {
@@ -63,82 +36,100 @@ export default function SkillInputs() {
     setSkills([...skills, ""]);
   };
 
-  const handleSubmit =async (e) => {
+  // 🔹 POST (create) or PUT (replace)
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    try{
-    const res = await axios.post("/api/userportfolio/skill",skills)
-    console.log(res.data)
-    alert("submitted")
-    }catch(error){
-      console.log(error)
+    try {
+      const method = isEdit ? "put" : "post";
+
+      const res = await axios[method]("/api/userportfolio/skill", {
+        skill: skills,
+      });
+
+      console.log(res.data);
+      alert(isEdit ? "Skills updated" : "Skills saved");
+      setIsEdit(true); // after first save → edit mode
+    } catch (error) {
+      console.log(error);
+    }
+  };
+    const handleDeleteSection = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete the entire skill section?"
+    );
+    if (!confirmDelete) return;
+  
+    try {
+      await axios.delete("/api/userportfolio/skill");
+      setSkills([]);
+      setIsEdit(false);
+      alert("skill section deleted");
+      navigate("/")
+    } catch (err) {
+      console.log(err);
     }
   };
 
   return (
-     <div className="pt-16 pl-8 md:pl-16 mb-10" id="Education">
-       <h1 className="font-bold text-[#04274a] text-[30px] mb-3">Skills</h1>
-       <div className="border-b-4 border-blue-500 w-[55px]" />
+    <div className="pt-16 pl-8 md:pl-16 mb-10" id="Skills">
+      <h1 className="font-bold text-[#04274a] text-[30px] mb-3">
+        {isEdit ? "Update Skills" : "Skills"}
+      </h1>
+      <div className="border-b-4 border-blue-500 w-[55px]" />
 
-    <form onSubmit={handleSubmit} className="flex flex-col pt-8 gap-4 w-full max-w-md">
-      {/* {skills.map((skill, index) => (
-        <div key={index} className="relative w-full">
-          <input
-            type="text"
-            placeholder={`Skill ${index + 1}`}
-            value={skill}
-            onChange={(e) => handleChange(index, e.target.value)}
-            className="w-full border border-gray-300 px-3 py-2 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-gray-200"
-          />
-          {skills.length > 1 && (
-            <FaTimes
-              onClick={() => handleRemove(index)}
-              className="absolute top-1/2 -translate-y-1/2 right-2 text-gray-500 cursor-pointer "
-              size={14}
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col pt-8 gap-4 w-full max-w-md"
+      >
+        {skills.map((skill, index) => (
+          <div key={index} className="relative w-full">
+            <input
+              type="text"
+              placeholder={`Skill ${index + 1}`}
+              value={skill}
+              onChange={(e) => handleChange(index, e.target.value)}
+              className="w-full border border-gray-300 px-3 py-2 rounded-[4px]"
             />
-          )}
-        </div>
-      ))} */}
-      
-      {skills.map((skill, index) => (
-  <div key={index} className="relative w-full">
-    <input
-      type="text"
-      placeholder={`Skill ${index + 1}`}
-      value={skill}
-      onChange={(e) => handleChange(index, e.target.value)}
-      className="w-full border border-gray-300 px-3 py-2 rounded-[4px] focus:outline-none focus:ring-2 focus:ring-gray-200"
-    />
 
-    {skills.length > 1 && (
-      <button
-        type="button"
-        onClick={() => handleRemove(index)}
-        className="absolute -right-3 top-1/2 -translate-y-1/2 
-                   bg-white border border-gray-300 shadow 
-                   rounded-full p-[3px] text-red-500 hover:text-red-700"
-      >
-        <FaTimes size={12} />
-      </button>
-    )}
-  </div>
-))}
+            {skills.length > 1 && (
+              <button
+                type="button"
+                onClick={() => handleRemove(index)}
+                className="absolute -right-3 top-1/2 -translate-y-1/2 
+                           bg-white border shadow rounded-full p-[3px]
+                           text-red-500"
+              >
+                <FaTimes size={12} />
+              </button>
+            )}
+          </div>
+        ))}
 
+        <button
+          type="button"
+          onClick={handleAdd}
+          className="flex items-center gap-2 text-blue-600 font-semibold
+                     px-3 py-2 border border-blue-600 rounded w-max"
+        >
+          <FaPlus /> Add More
+        </button>
 
-      <button
-        type="button"
-        onClick={handleAdd}
-        className="flex items-center gap-2 text-blue-600 font-semibold px-3 py-2 border border-blue-600 rounded hover:bg-blue-50 w-max"
-      >
-        <FaPlus /> Add More
-      </button>
-
-      <button
-        type="submit"
-        className="bg-blue-600 text-white p-2 rounded absolute bottom-4 right-12"
-      >
-        Submit
-      </button>
-    </form>
+        <button
+          type="submit"
+          className="bg-blue-600 text-white p-2 rounded self-end mt-4"
+        >
+          {isEdit ? "Update" : "Submit"}
+        </button>
+      </form>
+            <div className="flex justify-end mr-4 relative">
+    <button
+      type="button"
+      onClick={handleDeleteSection}
+      className="text-red-600 text-sm  self-end absolute bottom-0 mr-4"
+    >
+      Delete skill section
+    </button>
+    </div>
     </div>
   );
 }

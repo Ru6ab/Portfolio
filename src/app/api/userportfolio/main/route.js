@@ -110,3 +110,79 @@ export async function GET(req){
           }
       
         }
+
+
+
+
+
+export async function PUT(req) {
+  try {
+    const formData = await req.formData();
+
+    const name = formData.get("name");
+    const badgesRaw = formData.get("badges");
+    const imgFile = formData.get("img");
+
+    const badges = badgesRaw ? JSON.parse(badgesRaw) : [];
+
+    // Validate
+    if (!Array.isArray(badges) || !name) {
+      return NextResponse.json(
+        { message: "Invalid input" },
+        { status: 400 }
+      );
+    }
+
+    // Verify user
+    const user = await verifyToken(req);
+    if (!user || !user._id) {
+      return NextResponse.json(
+        { message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    // Find portfolio (must exist)
+    const portfolio = await UserPort.findOne({ userId: user._id });
+    if (!portfolio || !portfolio.main) {
+      return NextResponse.json(
+        { message: "Main section not found" },
+        { status: 404 }
+      );
+    }
+
+    // Handle image upload (optional)
+    let imgPath = null;
+    if (imgFile && imgFile.size > 0) {
+      const buffer = Buffer.from(await imgFile.arrayBuffer());
+      const timestamp = Date.now();
+      const ext = path.extname(imgFile.name);
+      const filename = `portfolio-${user._id}-${timestamp}${ext}`;
+      imgPath = `/uploads/${filename}`;
+
+      fs.writeFileSync(path.join(uploadsDir, filename), buffer);
+    }
+
+    // Update fields
+    portfolio.main.name = name;
+    portfolio.main.badges = badges;
+
+    if (imgPath) {
+      portfolio.main.img = imgPath; // update image only if new file
+    }
+
+    await portfolio.save();
+
+    return NextResponse.json(
+      { message: "Main section updated successfully", data: portfolio },
+      { status: 200 }
+    );
+
+  } catch (error) {
+    console.error("MAIN PUT ERROR:", error);
+    return NextResponse.json(
+      { message: "Server error occurred", error: error.message },
+      { status: 500 }
+    );
+  }
+}

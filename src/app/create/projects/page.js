@@ -1,295 +1,247 @@
-// 'use client'
-// import React, { useState } from 'react';
-// import { FaTimes, FaPlus } from 'react-icons/fa';
+"use client";
+import React, { useEffect, useState } from "react";
+import { FaTimes, FaPlus } from "react-icons/fa";
+import axios from "axios";
 
-// export default function ProjectForm() {
-//   const [project, setProject] = useState([{
-//     title: '',
-//     description: '',
-//     detailedDescription: '',
-//     contributions: [''], // array of strings
-//   }]);
+export default function ProjectInputs() {
+  const [project, setProject] = useState([
+    {
+      title: "",
+      description: "",
+      detailedDescription: "",
+      contributions: [""],
+    },
+  ]);
+  const [isEdit, setIsEdit] = useState(false);
 
- 
+  // 🔹 Fetch projects on load
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await axios.get("/api/userportfolio/project");
+       console.log("hie")
+        if (res.data.data?.length) {
+            const formatted = res.data.data.map((p) => ({
+            title: p.title || "",
+            description: p.description || "",
+            detailedDescription: p.detailedDescription || "",
+            contributions: p.contributions?.length ? p.contributions : [""],
+          }));
 
-//    const handleChange = (index, e) => {
-//     const { name, value } = e.target;
-//     const newProject = [...project];
-//     newProject[index][name] = value;
-//     setProject(newExp);
-//   };
-  
-//     const handleContributionChange = (projectIndex, conIndex, value) => {
-//     const newProject = [...project];
-//     newProject[projectIndex].contributions[conIndex] = value;
-//     setExperience(newExp);
-//   };
+          console.log(res.data.data)
+          setProject(formatted);
+          setIsEdit(true);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
 
-//    const addContribution = () => {
-//     setFormData((prev) => ({
-//       ...prev,
-//       contributions: [...prev.contributions, ''],
-//     }));
-//   };
+    fetchProjects();
+  }, []);
 
-//   const removeContribution = (index) => {
-//     setFormData((prev) => ({
-//       ...prev,
-//       contributions: prev.contributions.filter((_, i) => i !== index),
-//     }));
-//   };
+  // 🔹 Handle normal fields
+  const handleChange = (index, field, value) => {
+    const updated = [...project];
+    updated[index][field] = value;
+    setProject(updated);
+  };
 
-//  const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const res = await axios.post('/api/userportfolio/project', project);
-//       console.log('Response:', res.data);
-//       } catch (err) {
-//       console.error(err);
-//       console.log(err)
-//     }
-//   };
+  // 🔹 Contribution handlers
+  const handleContributionChange = (pIndex, cIndex, value) => {
+    const updated = [...project];
+    updated[pIndex].contributions[cIndex] = value;
+    setProject(updated);
+  };
 
-//   return (
-//     <div className="mx-auto pt-16 pl-8 md:pl-16 mb-10">
-//       <h1 className="font-bold text-[#04274a] text-[30px] mb-3">Projects</h1>
-//       <div className="border-b-4 border-blue-500 w-[55px]" />
+  const addContribution = (pIndex) => {
+    const updated = [...project];
+    updated[pIndex].contributions.push("");
+    setProject(updated);
+  };
 
-//       <form onSubmit={handleSubmit} className="flex flex-col pt-8 gap-4">
-//         {/* Title */}
-//         <div className="flex flex-col gap-1">
-//           <label className="font-semibold">Project Title</label>
-//           <input
-//             type="text"
-//             name="title"
-//             value={project.title}
-//             onChange={(e) => handleChange(index, e)}
-//             className="w-[450px] border border-gray-300 rounded px-3 py-2 text-xl font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
-//           />
-//         </div>
+  const removeContribution = (pIndex, cIndex) => {
+    const updated = [...project];
+    updated[pIndex].contributions = updated[pIndex].contributions.filter(
+      (_, i) => i !== cIndex
+    );
+    setProject(updated);
+  };
 
-//         {/* Short Description */}
-//         <div className="flex flex-col gap-1">
-//           <label className="font-semibold italic">Short Description</label>
-//           <input
-//             type="text"
-//             name="description"
-//             value={project.description}
-//             onChange={(e) => handleChange(index, e)}
-//             className="w-[450px] border border-gray-300 rounded px-3 py-2 italic focus:outline-none focus:ring-2 focus:ring-blue-500"
-//           />
-//         </div>
+  // 🔹 Add / remove project
+  const addProject = () => {
+    setProject([
+      ...project,
+      {
+        title: "",
+        description: "",
+        detailedDescription: "",
+        contributions: [""],
+      },
+    ]);
+  };
 
-//         {/* Detailed Description */}
-//         <div className="flex flex-col gap-1">
-//           <label className="font-semibold">Detailed Description</label>
-//           <textarea
-//             name="detailedDescription"
-//             value={project.detailedDescription}
-//             onChange={(e) => handleChange(index, e)}
-//             className="w-[450px] border border-gray-300 rounded px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-//             rows={4}
-//           />
-//         </div>
+  const removeProject = (index) => {
+    setProject(project.filter((_, i) => i !== index));
+  };
 
-//         {/* Contributions */}
-//         <div className="flex flex-col gap-2">
-//           <label className="font-semibold">Contributions</label>
-//           {project.contributions.map((contributions, index) => (
-//             <div key={index} className="flex items-center gap-2">
-//               <input
-//                 type="text"
-//                 value={contributions}
-//                 name={project.contributions}
-//                 onChange={(e) => handleContributionChange(index, e.target.value)}
-//                 className="w-[450px] border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-//               />
-//               <button
-//                 type="button"
-//                 onClick={() => removeContribution(index)}
-//                 className="text-red-500 hover:text-red-700"
-//               >
-//                 <FaTimes />
-//               </button>
-//             </div>
-//           ))}
-//           <button
-//             type="button"
-//             onClick={addContribution}
-//             className="flex items-center gap-1 text-blue-500 hover:text-blue-700 mt-2"
-//           >
-//             <FaPlus /> Add Contribution
-//           </button>
-//         </div>
-
-//         {/* Submit */}
-//         <button
-//           type="submit"
-//           className="bg-blue-600 text-white p-2 rounded absolute bottom-4 right-12"
-//         >
-//           Submit
-//         </button>
-//       </form>
-//     </div>
-//   );
-// }
-
-
-'use client'
-import React, { useState } from 'react'
-import { FaTimes, FaPlus } from 'react-icons/fa'
-import axios from 'axios'
-
-export default function ProjectForm() {
-  const [project, setProject] = useState({
-    title: '',
-    description: '',
-    detailedDescription: '',
-    contributions: [''],
-  })
-
-  // ----------------------------
-  // Handle normal input changes
-  // ----------------------------
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setProject((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
-
-  // ----------------------------------
-  // Handle contribution input changes
-  // ----------------------------------
-  const handleContributionChange = (index, value) => {
-    setProject((prev) => {
-      const updated = [...prev.contributions]
-      updated[index] = value
-      return { ...prev, contributions: updated }
-    })
-  }
-
-  // ----------------------------
-  // Add new contribution field
-  // ----------------------------
-  const addContribution = () => {
-    setProject((prev) => ({
-      ...prev,
-      contributions: [...prev.contributions, ''],
-    }))
-  }
-
-  // ----------------------------
-  // Remove contribution field
-  // ----------------------------
-  const removeContribution = (index) => {
-    setProject((prev) => ({
-      ...prev,
-      contributions: prev.contributions.filter((_, i) => i !== index),
-    }))
-  }
-
-  // ----------------------------
-  // Submit form
-  // ----------------------------
+  // 🔹 Submit
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const res = await axios.post('/api/userportfolio/project', project)
-      console.log('Response:', res.data)
-      alert("submitted")
+      const method = isEdit ? "put" : "post";
+
+      await axios[method]("/api/userportfolio/project", {
+        project,
+      });
+
+      alert(isEdit ? "Projects updated" : "Projects saved");
+      setIsEdit(true);
     } catch (err) {
-      console.error(err)
+      console.log(err);
     }
-  }
+  };
+     const handleDeleteSection = async () => {
+          const confirmDelete = window.confirm(
+            "Are you sure you want to delete the entire project section?"
+          );
+          if (!confirmDelete) return;
+        
+          try {
+            await axios.delete("/api/userportfolio/project");
+            setProject([]);
+            setIsEdit(false);
+            alert("project section deleted");
+            navigate("/")
+          } catch (err) {
+            console.log(err);
+          }
+        }
 
   return (
-    <div className="mx-auto pt-16 pl-8 md:pl-16 mb-10 relative">
-      <h1 className="font-bold text-[#04274a] text-[30px] mb-3">Projects</h1>
+    <div className="pt-16 pl-8 md:pl-16 mb-10" id="Projects">
+      <h1 className="font-bold text-[#04274a] text-[30px] mb-3">
+        {isEdit ? "Update Projects" : "Projects"}
+      </h1>
       <div className="border-b-4 border-blue-500 w-[55px]" />
 
-      <form onSubmit={handleSubmit} className="flex flex-col  pt-8 gap-4">
-        {/* Project Title */}
-        <div className="flex flex-col  gap-1">
-          <label className="font-semibold">Project Title</label>
-          <input
-            type="text"
-            name="title"
-            value={project.title}
-            onChange={handleChange}
-            className="w-[450px] border rounded px-3 py-2 text-xl font-semibold"
-          />
-        </div>
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col pt-8 gap-6 max-w-md"
+      >
+        {project.map((p, index) => (
+          <div key={index} className="relative border p-4 rounded">
+            <input
+              type="text"
+              placeholder="Project Title"
+              value={p.title}
+              onChange={(e) =>
+                handleChange(index, "title", e.target.value)
+              }
+              className="w-full border px-3 py-2 rounded mb-2 font-semibold"
+            />
 
-        {/* Short Description */}
-        <div className="flex flex-col gap-1">
-          <label className="font-semibold italic">Short Description</label>
-          <input
-            type="text"
-            name="description"
-            value={project.description}
-            onChange={handleChange}
-            className="w-[450px] border rounded px-3 py-2 italic"
-          />
-        </div>
+            <input
+              type="text"
+              placeholder="Short Description"
+              value={p.description}
+              onChange={(e) =>
+                handleChange(index, "description", e.target.value)
+              }
+              className="w-full border px-3 py-2 rounded mb-2 italic"
+            />
 
-        {/* Detailed Description */}
-        <div className="flex flex-col gap-1">
-          <label className="font-semibold">Detailed Description</label>
-          <textarea
-            name="detailedDescription"
-            value={project.detailedDescription}
-            onChange={handleChange}
-            rows={4}
-            className="w-[450px] border rounded px-3 py-2 resize-none"
-          />
-        </div>
+            <textarea
+              placeholder="Detailed Description"
+              value={p.detailedDescription}
+              onChange={(e) =>
+                handleChange(index, "detailedDescription", e.target.value)
+              }
+              rows={4}
+              className="w-full border px-3 py-2 rounded mb-3 resize-none"
+            />
 
-        {/* Contributions */}
-        <div className="flex flex-col gap-2">
-          <label className="font-semibold">Contributions</label>
+            <p className="font-semibold mb-1">Contributions</p>
 
-          {project.contributions.map((contribution, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <input
-                type="text"
-                value={contribution}
-                onChange={(e) =>
-                  handleContributionChange(index, e.target.value)
-                }
-                className="w-[450px] border rounded px-3 py-2"
-              />
+            {p.contributions.map((c, cIndex) => (
+              <div key={cIndex} className="relative mb-2">
+                <input
+                  type="text"
+                  value={c}
+                  onChange={(e) =>
+                    handleContributionChange(
+                      index,
+                      cIndex,
+                      e.target.value
+                    )
+                  }
+                  className="w-full border px-3 py-2 rounded"
+                />
 
-              {project.contributions.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removeContribution(index)}
-                  className="text-red-500"
-                >
-                  <FaTimes />
-                </button>
-              )}
-            </div>
-          ))}
+                {p.contributions.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      removeContribution(index, cIndex)
+                    }
+                    className="absolute -right-3 top-1/2 -translate-y-1/2
+                               bg-white border shadow rounded-full p-[3px]
+                               text-red-500"
+                  >
+                    <FaTimes size={12} />
+                  </button>
+                )}
+              </div>
+            ))}
 
-          <button
-            type="button"
-            onClick={addContribution}
-            className="flex items-center gap-1 text-blue-500 mt-2"
-          >
-            <FaPlus /> Add Contribution
-          </button>
-        </div>
+            <button
+              type="button"
+              onClick={() => addContribution(index)}
+              className="flex items-center gap-2 text-blue-600 font-semibold
+                         px-3 py-1 border border-blue-600 rounded w-max mt-2"
+            >
+              <FaPlus /> Add Contribution
+            </button>
 
-        {/* Submit */}
+            {project.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeProject(index)}
+                className="absolute -right-3 -top-3
+                           bg-white border shadow rounded-full p-[4px]
+                           text-red-500"
+              >
+                <FaTimes size={12} />
+              </button>
+            )}
+          </div>
+        ))}
+
+        <button
+          type="button"
+          onClick={addProject}
+          className="flex items-center gap-2 text-blue-600 font-semibold
+                     px-3 py-2 border border-blue-600 rounded w-max"
+        >
+          <FaPlus /> Add More Projects
+        </button>
+
         <button
           type="submit"
-          className="bg-blue-600 text-white p-2 rounded w-[150px] mt-6"
+          className="bg-blue-600 text-white p-2 rounded self-end mt-4"
         >
-          Submit
+          {isEdit ? "Update" : "Submit"}
         </button>
       </form>
+                  <div className="flex justify-end mr-4 relative">
+    <button
+      type="button"
+      onClick={handleDeleteSection}
+      className="text-red-600 text-sm  self-end absolute bottom-0 mr-4"
+    >
+      Delete project section
+    </button>
     </div>
-  )
+    </div>
+  );
 }

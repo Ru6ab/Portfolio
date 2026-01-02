@@ -1,242 +1,194 @@
-// 'use client'
-// import axios from 'axios';
-// import React, { useState } from 'react'
-// import { FaTimes } from 'react-icons/fa';
-// import Leadership from '../../components3/Leadership'
-// export default function page() {
-//     const [degrees, setdegrees] = useState([
-//     { school: "", degree: "", year: "" }
-//   ]);
-
-//   const handleChange = (index, e) => {
-//     const { name, value } = e.target;
-//     const newdegrees = [...degrees];
-//     newdegrees[index][name] = value;
-//     setdegrees(newdegrees);
-//   };
-
-//   const adddegrees = () => {
-//     setdegrees((prev) => [...prev, { school: "", degree: "", year: "" }]);
-//   };
-
-//   const removedegrees = (index) => {
-//     setdegrees((prev) => prev.filter((_, i) => i !== index));
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const res = await axios.post('/api/userportfolio/degree', degrees);
-//       console.log('Response:', res.data);
-//           } catch (err) {
-//       console.error(err);
-      
-//     }
-//   };
-//   return (
-//       <div className="pt-16 pl-8 md:pl-16 mb-10" id="degrees">
-//        <h1 className="font-bold text-[#04274a] text-[30px] mb-3">Honors & degrees</h1>
-//        <div className="border-b-4 border-blue-500 w-[55px]" />
-       
-       
-//         <form onSubmit={handleSubmit} className="flex flex-col gap-6 mt-6 mb-8 relative">
-//                {degrees.map((degrees, index) => (
-//                  <div key={index} className="relative w-max ">
-//                    {/* X button above border */}
-//                    {degrees.length > 1 && (
-//                      <button
-//                        type="button"
-//                        onClick={() => removedegrees(index)}
-//                        className="absolute -top-3 -right-3 bg-white border border-gray-300 rounded-full p-1 text-red-500 hover:text-red-700 z-10"
-//                      >
-//                        <FaTimes size={12} />
-//                      </button>
-//                    )}
-       
-//                    {/* Section Border */}
-//                    <div className="border border-gray-300 rounded px-4 py-3 flex flex-col gap-3">
-//                      {/* degree */}
-//                      <div className="flex flex-col gap-1">
-//                        <label className="font-semibold text-gray-700">Award</label>
-//                        <input
-//                          className="w-[450px] border border-gray-300 rounded px-2 py-1 text-sm"
-//                          value={degrees.degree}
-//                          type="text"
-//                          name="degree"
-//                          onChange={(e) => handleChange(index, e)}
-//                        />
-//                      </div>
-       
-//                      {/* year */}
-//                      <div className="flex flex-col gap-1">
-//                        <label className="font-semibold text-gray-700">year</label>
-//                        <input
-//                          className="w-[450px] border border-gray-300 rounded px-2 py-1 text-sm"
-//                          value={degrees.year}
-//                          type="text"
-//                          name="year"
-//                          onChange={(e) => handleChange(index, e)}
-//                        />
-//                      </div>
-       
-//                      {/* School */}
-//                      <div className="flex flex-col gap-1">
-//                        <label className="font-semibold text-gray-700">School</label>
-//                        <input
-//                          className="w-[450px] border border-gray-300 rounded px-2 py-1 text-sm italic"
-//                          value={degrees.school}
-//                          type="text"
-//                          name="school"
-//                          onChange={(e) => handleChange(index, e)}
-//                        />
-//                      </div>
-//                    </div>
-//                  </div>
-//                ))}
-       
-//                {/* Add degrees Button */}
-//                <button
-//                  type="button"
-//                  onClick={adddegrees}
-//                  className="flex items-center gap-2 text-blue-600 font-semibold px-3 py-2 border border-blue-600 rounded hover:bg-blue-50 w-max mt-2"
-//                >
-//                  + Add degrees
-//                </button>
-       
-//                {/* Submit Button */}
-//                <button
-//                  type="submit"
-//                  className="bg-blue-600 text-white p-2 rounded absolute bottom-0 right-12"
-//                >
-//                  Submit
-//                </button>
-//              </form>
-
-//           <Leadership/>
-//        </div>
-//   )
-// }
 
 'use client'
-import axios from 'axios';
-import React, { useState } from 'react';
-import { FaTimes } from 'react-icons/fa';
-import LeadershipPage from '../../components3/LeadershipPage';
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { FaTimes } from 'react-icons/fa'
+import LeadershipPage from '../../components/LeadershipPage'
 
 export default function Page() {
   const [award, setAward] = useState([
-    { school: "", degree: "", year: "" }
-  ]);
+    { school: '', degree: '', year: '' },
+  ])
+  const [isUpdate, setIsUpdate] = useState(false)
+  const [loading, setLoading] = useState(true)
 
+  // ==========================
+  // FETCH EXISTING DATA
+  // ==========================
+  useEffect(() => {
+    const fetchAwards = async () => {
+      try {
+        const res = await axios.get('/api/userportfolio/award', {
+          withCredentials: true,
+        })
+
+        if (res.data?.data?.length > 0) {
+          setAward(res.data.data)
+          setIsUpdate(true)
+        }
+      } catch (err) {
+        console.log('No existing awards')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchAwards()
+  }, [])
+
+  // ==========================
+  // INPUT HANDLERS
+  // ==========================
   const handleChange = (index, e) => {
-    const { name, value } = e.target;
-    const updated = [...award];
-    updated[index][name] = value;
-    setAward(updated);
-  };
+    const { name, value } = e.target
+    const updated = [...award]
+    updated[index][name] = value
+    setAward(updated)
+  }
 
   const addAward = () => {
-    setAward(prev => [...prev, { school: "", degree: "", year: "" }]);
-  };
+    setAward([...award, { school: '', degree: '', year: '' }])
+  }
 
   const removeAward = (index) => {
-    setAward(prev => prev.filter((_, i) => i !== index));
-  };
+    setAward(award.filter((_, i) => i !== index))
+  }
 
+  // ==========================
+  // SUBMIT
+  // ==========================
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post('/api/userportfolio/award', award);
-      console.log('Response:', res.data);
-       alert("submitted")
-    } catch (err) {
-      console.error(err);
+    e.preventDefault()
+
+    const cleanedAwards = award
+      .map(a => ({
+        school: a.school.trim(),
+        degree: a.degree.trim(),
+        year: a.year.trim(),
+      }))
+      .filter(a => a.school || a.degree || a.year)
+
+    if (cleanedAwards.length === 0) {
+      alert('Add at least one award')
+      return
     }
-  };
+
+    try {
+      const url = '/api/userportfolio/award'
+      const method = isUpdate ? 'put' : 'post'
+
+      const res = await axios[method](
+        url,
+        { award: cleanedAwards },
+        { withCredentials: true }
+      )
+
+      console.log(res.data)
+      alert(isUpdate ? 'Updated successfully' : 'Submitted successfully')
+      setIsUpdate(true)
+    } catch (err) {
+      console.error(err.response?.data || err.message)
+    }
+  }
+     const handleDeleteSection = async () => {
+          const confirmDelete = window.confirm(
+            "Are you sure you want to delete the entire award section?"
+          );
+          if (!confirmDelete) return;
+        
+          try {
+            await axios.delete("/api/userportfolio/award");
+            setAward([]);
+         
+            alert("award section deleted");
+            
+          } catch (err) {
+            console.log(err);
+          }
+        }
+
+  if (loading) return <p className="pt-16 pl-8">Loading...</p>
 
   return (
     <div className="pt-16 pl-8 md:pl-16 mb-10" id="degrees">
-      <h1 className="font-bold text-[#04274a] text-[30px] mb-3">Honors & Awards</h1>
+      <h1 className="font-bold text-[#04274a] text-[30px] mb-3">
+        Honors & Awards
+      </h1>
       <div className="border-b-4 border-blue-500 w-[55px]" />
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6 mt-6 relative">
-
         {award.map((awrd, index) => (
           <div key={index} className="relative w-max">
-
-            {/* Remove button */}
             {award.length > 1 && (
               <button
                 type="button"
                 onClick={() => removeAward(index)}
-                className="absolute -top-3 -right-3 bg-white border border-gray-300 rounded-full p-1 text-red-500 hover:text-red-700 z-10"
+                className="absolute -top-3 -right-3 bg-white border border-gray-300 rounded-full p-1 text-red-500"
               >
                 <FaTimes size={12} />
               </button>
             )}
 
             <div className="border border-gray-300 rounded px-4 py-3 flex flex-col gap-3">
-
-              {/* Award / Degree */}
               <div className="flex flex-col gap-1">
                 <label className="font-semibold text-gray-700">Award</label>
                 <input
-                  className="w-[450px] border border-gray-300 rounded px-2 py-1 text-sm"
-                  value={awrd.degree}
-                  type="text"
+                  className="w-[450px] border rounded px-2 py-1 text-sm"
                   name="degree"
+                  value={awrd.degree}
                   onChange={(e) => handleChange(index, e)}
                 />
               </div>
 
-              {/* year */}
               <div className="flex flex-col gap-1">
-                <label className="font-semibold text-gray-700">year</label>
+                <label className="font-semibold text-gray-700">Year</label>
                 <input
-                  className="w-[450px] border border-gray-300 rounded px-2 py-1 text-sm"
-                  value={awrd.year}
-                  type="text"
+                  className="w-[450px] border rounded px-2 py-1 text-sm"
                   name="year"
+                  value={awrd.year}
                   onChange={(e) => handleChange(index, e)}
                 />
               </div>
 
-              {/* School */}
               <div className="flex flex-col gap-1">
                 <label className="font-semibold text-gray-700">School</label>
                 <input
-                  className="w-[450px] border border-gray-300 rounded px-2 py-1 text-sm italic"
-                  value={awrd.school}
-                  type="text"
+                  className="w-[450px] border rounded px-2 py-1 text-sm italic"
                   name="school"
+                  value={awrd.school}
                   onChange={(e) => handleChange(index, e)}
                 />
               </div>
-
             </div>
           </div>
         ))}
 
-        {/* Add Button */}
         <button
           type="button"
           onClick={addAward}
-          className="flex items-center gap-2 text-blue-600 font-semibold px-3 py-2 border border-blue-600 rounded hover:bg-blue-50 w-max mt-2"
+          className="text-blue-600 font-semibold px-3 py-2 border border-blue-600 rounded w-max"
         >
-          + Add Degrees
+          + Add Award
         </button>
 
-        {/* Submit */}
         <button
           type="submit"
           className="bg-blue-600 text-white p-2 rounded absolute bottom-0 right-12"
         >
-          Submit
+          {isUpdate ? 'Update' : 'Submit'}
         </button>
       </form>
-
+             <div className="flex justify-end mr-4 relative">
+    <button
+      type="button"
+      onClick={handleDeleteSection}
+      className="text-red-600 text-sm  self-end absolute bottom-0 mr-4"
+    >
+      Delete award section
+    </button>
+    </div>
       <LeadershipPage />
     </div>
-  );
+  )
 }
 

@@ -29,42 +29,6 @@ export default function Page() {
   };
 
   return (
-    // <div className="p-6 max-w-md mx-auto">
-    //   <h1 className="text-2xl font-semibold mb-4">Create Account</h1>
-
-    //   <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-    //     <input
-    //       name="username"
-    //       placeholder="Username"
-    //       value={formData.username}
-    //       onChange={handleChange}
-    //       className="border p-2 rounded"
-    //     />
-
-    //     <input
-    //       name="password"
-    //       type="password"
-    //       placeholder="Password"
-    //       value={formData.password}
-    //       onChange={handleChange}
-    //       className="border p-2 rounded"
-    //     />
-
-       
-
-    //     <button
-    //       type="submit"
-    //       className="bg-blue-600 text-white p-2 rounded"
-    //     >
-    //       Sign Up
-    //     </button>
-    //   </form>
-    //   { error1 && 
-    //   ( 
-    //   <p className='text-rose-500'>{error1}</p>
-    //   )}
-    // </div>
-
    <div className="flex items-center justify-center min-h-screen bg-gray-100">
   <div className="p-6 max-w-md w-full bg-white shadow-lg rounded-xl">
     <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">

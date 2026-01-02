@@ -1,0 +1,86 @@
+export const NAV_CONFIG = [
+  {
+    key: "main",
+    label: "Home",
+    type: "object",
+    deletable: false,
+    showWhenEmpty: true,   // always show
+  },
+    {
+    key: "profile",
+    label: "Profile",
+    type: "object",
+    deletable: false,
+    showWhenEmpty: true,   // always show
+  },
+  {
+    key: "about",
+    label: "About",
+    type: "object",
+    deletable: false,
+    showWhenEmpty: false,
+  },
+  {
+    key: "education",
+    label: "Education",
+    type: "array",
+    deletable: true,
+    showWhenEmpty: false,
+  },
+  {
+    key: "experience",
+    label: "Experience",
+    type: "array",
+    deletable: true,
+    showWhenEmpty: false,
+  },
+  {
+    key: "project",
+    label: "Projects",
+    type: "array",
+    deletable: true,
+    showWhenEmpty: false,
+  },
+  {
+    key: "skill",
+    label: "Skills",
+    type: "array",
+    deletable: false,
+    showWhenEmpty: false,
+  },
+  {
+    key: "interest",
+    label: "Interests",
+    type: "array",
+    deletable: false,
+    showWhenEmpty: false,
+  },
+  {
+    key: "publication",
+    label: "Publications",
+    type: "array",
+    deletable: true,
+    showWhenEmpty: false,
+  },
+  {
+    key: "award",
+    label: "Awards",
+    type: "array",
+    deletable: true,
+    showWhenEmpty: false,
+  },
+  {
+    key: "leadership",
+    label: "Leadership",
+    type: "array",
+    deletable: true,
+    showWhenEmpty: false,
+  },
+  {
+    key: "language",
+    label: "Languages",
+    type: "array",
+    deletable: false,
+    showWhenEmpty: false,
+  },
+];
