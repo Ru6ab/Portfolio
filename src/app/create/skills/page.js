@@ -75,7 +75,7 @@ export default function SkillInputs() {
       <h1 className="font-bold text-[#04274a] text-[30px] mb-3">
         {isEdit ? "Update Skills" : "Skills"}
       </h1>
-      <div className="border-b-4 border-blue-500 w-[55px]" />
+      <div className=" flex flex-col border-b-4 border-blue-500 w-[55px]" />
 
       <form
         onSubmit={handleSubmit}
@@ -114,22 +114,23 @@ export default function SkillInputs() {
           <FaPlus /> Add More
         </button>
 
-        <button
+       
+     <button
           type="submit"
-          className="bg-blue-600 text-white p-2 rounded self-end mt-4"
+          // disabled={!validInput}
+          className={`bg-blue-600 text-white px-4 py-2 rounded mt-22 self-end mr-4 `}
         >
-          {isEdit ? "Update" : "Submit"}
+          {isEdit ? "Update" : "Save"}
         </button>
       </form>
-            <div className="flex justify-end mr-4 relative">
-    <button
-      type="button"
-      onClick={handleDeleteSection}
-      className="text-red-600 text-sm  self-end absolute bottom-0 mr-4"
-    >
-      Delete skill section
-    </button>
+     
+     <div className="">
+          <div className="flex justify-end mr-4 relative">
+   
+   
     </div>
+    </div> 
+
     </div>
   );
 }

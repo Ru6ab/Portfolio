@@ -36,7 +36,7 @@ export default function Page() {
 
         const data = res.data?.data;
 
-        if (data) {
+        if (data && (data._id || data.name)) {
           setFormData({
             name: data.name || '',
             gitHubUrl: data.gitHubUrl || '',
@@ -87,6 +87,7 @@ export default function Page() {
   // SUBMIT (CREATE / UPDATE)
   // ==========================
   const handleSubmit = async (e) => {
+     console.log("SUBMIT CLICKED");
     e.preventDefault();
 
     if (!formData.name.trim()) {
@@ -122,23 +123,25 @@ export default function Page() {
       setIsUpdate(true);
       router.refresh();
     } catch (err) {
+        console.log("Backend error:", err.response?.data);
+  console.log("Status:", err.response?.status);
+  alert(JSON.stringify(err.response?.data));
       console.error(err);
       setError1('Failed to submit profile');
     }
   };
 
-  // ==========================
-  // LOADING STATE
-  // ==========================
+ 
   if (loading) return <p className="pt-16 pl-8">Loading...</p>;
 
   return (
-    <div className="min-h-screen pl-12 max-w-md flex flex-col justify-center mt-16 mb-10 items-center relative">
+    <div className='flex flex-col'>
+    <div className="min-h-screen px-4 md:ml-40 lg:pl-12 lg:ml-0 max-w-md md:mx-0  flex flex-col justify-center  items-center  mt-16 mb-10 relative">
       <h1 className="text-2xl font-semibold mb-4">
         {isUpdate ? 'Update Profile' : 'Create Profile'}
       </h1>
 
-      <form onSubmit={handleSubmit} className="flex flex-col items-center gap-4 w-full relative">
+      <form onSubmit={handleSubmit} id="profileForm" className="flex flex-col items-center gap-4 w-full relative">
         {/* PROFILE IMAGE */}
         <div
           className="h-[90px] w-[90px] rounded-full border overflow-hidden cursor-pointer"
@@ -211,14 +214,18 @@ export default function Page() {
         </div>
 
         {error1 && <p className="text-rose-500">{error1}</p>}
-
+      
+      </form>
+      </div>
+        <div className='relative '>
         <button
           type="submit"
-          className="bg-blue-600 text-white p-2 rounded fixed bottom-10 right-12"
+          form="profileForm"
+          className="bg-blue-600 text-white p-2 whitespace-nowrap absolute -bottom-2 right-3"
         >
           {isUpdate ? 'Update Profile' : 'Create Profile'}
         </button>
-      </form>
+        </div>
     </div>
   );
 }

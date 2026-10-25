@@ -226,6 +226,9 @@ export default function Page() {
       alert(isUpdate ? "Updated successfully!" : "Created successfully!");
       console.log(res.data);
     } catch (error) {
+        console.log("Backend error:", error.response?.data);
+  console.log("Status:", error.response?.status);
+  alert(JSON.stringify(error.response?.data));
       console.error(error);
       alert("Something went wrong");
     }
@@ -295,7 +298,7 @@ export default function Page() {
 
         <button
           onClick={() => imgRef.current.click()}
-          className="mt-6 bg-blue-600 text-white px-4 py-2 rounded"
+          className="mt-6  ml-4 bg-blue-600 text-white px-4 py-2 rounded"
         >
           Change Background Image
         </button>

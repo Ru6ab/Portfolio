@@ -1,6 +1,7 @@
 
 
 'use client'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { FaBars, FaTimes } from 'react-icons/fa'
 import SideNav from '../components/SideNav'
@@ -17,6 +18,7 @@ import Project from '../components/Project'
 import Languages from '../components/Languages'
 import Skill from '../components/Skill'
 import Interest from '../components/Interest'
+
 
 export default function Home() {
   const [openMenu, setOpenMenu] = useState(false)
@@ -74,9 +76,29 @@ export default function Home() {
 
     fetchData();
   }, []);
+  const hasData = (d) => {
+  if (!d) return false
+  if (Array.isArray(d)) return d.length > 0
+  if (typeof d === 'object') return Object.values(d).some(Boolean)
+  return Boolean(d)
+}
+
+const visible = {
+  about: hasData(about),
+  education: hasData(education),
+  experience: hasData(experience),
+  publication: hasData(publication),
+  award: hasData(award),
+  leadership: hasData(leadership),
+  project: hasData(project),
+  skill: hasData(skill),
+  interest: hasData(interest),
+  language: hasData(language),
+}
 
 
   return (
+    <>
     <div className={`flex h-screen font-sans relative `}>
       {/* Mobile Menu Button */}
       <button
@@ -88,7 +110,7 @@ export default function Home() {
 
       {/* Desktop sidebar */}
       <div className="hidden lg:block w-[285px] h-screen overflow-auto overflow-x-hidden sidebar-scroll transform transition-transform duration-500 ease-linear">
-        <SideNav/>
+        <SideNav visible={visible}/>
       </div>
 
       {/* Mobile sidebar overlay */}
@@ -106,13 +128,19 @@ export default function Home() {
         }`}
       >
         <div className="flex p-4"></div>
-        <SideNav  closeSidebar={() => setOpenMenu(false)} />
+        <SideNav  visible={visible} closeSidebar={() => setOpenMenu(false)} />
       </div>
 
       {/* Main content */}
       <div className="flex-1 h-full overflow-auto main-scroll">
+           <Link
+          href="/create/main"
+          className="fixed top-4 right-16 lg:right-6 z-30 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-full shadow-lg transition-colors"
+        >
+          Edit Portfolio
+        </Link>
         <MainSection data={main}/>
-        <div className="min-h-screen">
+        {/* <div className="min-h-screen">
            <About  data={about}/>
            <Education data={education}/>
            <Experience data={experience}/>         
@@ -124,8 +152,21 @@ export default function Home() {
           <Interest data={interest}/>
           <Languages data={language}/>
           
-        </div>
+        </div> */}
+        <div className="min-h-screen">
+  {hasData(about)       && <About data={about} />}
+  {hasData(education)   && <Education data={education} />}
+  {hasData(experience)  && <Experience data={experience} />}
+  {hasData(publication) && <Publications data={publication} />}
+  {hasData(award)       && <Award data={award} />}
+  {hasData(leadership)  && <Leadership data={leadership} />}
+  {hasData(project)     && <Project data={project} />}
+  {hasData(skill)       && <Skill data={skill} />}
+  {hasData(interest)    && <Interest data={interest} />}
+  {hasData(language)    && <Languages data={language} />}
+</div>
       </div>
     </div>
+    </>
   )
 }

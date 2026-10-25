@@ -47,7 +47,7 @@ const ExperienceSchema = new mongoose.Schema({
 const AboutSchema = new mongoose.Schema({
   description: { type: String, default: "" },
   email: { type: String, default: "" },
-  dob: { type: Date, default: null },
+  birthday: { type: Date, default: null },
   cv: { type: String, default: "" },
 });
 

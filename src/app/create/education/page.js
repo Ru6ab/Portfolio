@@ -90,13 +90,13 @@ export default function Education() {
 
 
   return (
-    <div className="pt-16 h-screen pl-8 md:pl-16 mb-6 " id="Education">
+    <div className="pt-16 h-screen pl-4 md:pl-8 md:pl-16 mb-6 " id="Education">
       <h1 className="font-bold text-[#04274a] text-[30px] mb-3">
         {isEdit ? "Update Education" : "Education"}
       </h1>
       <div className="border-b-2 border-blue-500 w-[55px]" />
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6 mt-6 pb-10">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6 mt-6 pb-10 ">
         {education.map((edu, index) => (
           <div key={index} className="relative w-max">
             {education.length > 1 && (
@@ -109,27 +109,27 @@ export default function Education() {
               </button>
             )}
 
-            <div className="border border-gray-300 rounded px-4 py-3 flex flex-col gap-3">
+            <div className="border border-gray-300 rounded px-2  md:px-4 py-3 flex flex-col gap-3 ">
               <input
                 name="degree"
                 placeholder="Degree"
                 value={edu.degree}
                 onChange={e => handleChange(index, e)}
-                className="w-[450px] border px-2 py-1 rounded"
+                className="w-[300px] md:w-[450px] border px-2 py-1 rounded"
               />
               <input
                 name="year"
                 placeholder="Year / Duration"
                 value={edu.year}
                 onChange={e => handleChange(index, e)}
-                className="w-[450px] border px-2 py-1 rounded"
+                className="w-[300px] md:w-[450px] border px-2 py-1 rounded"
               />
               <input
                 name="school"
                 placeholder="School"
                 value={edu.school}
                 onChange={e => handleChange(index, e)}
-                className="w-[450px] border px-2 py-1 rounded"
+                className="w-[300px]  md:w-[450px] border px-2 py-1 rounded"
               />
             </div>
           </div>
@@ -156,7 +156,7 @@ export default function Education() {
     <button
       type="button"
       onClick={handleDeleteSection}
-      className="text-red-600 text-sm  self-end absolute bottom-0 mr-4"
+      className="text-red-600 text-sm  self-end absolute bottom-0 mr-1"
     >
       Delete education section
     </button>

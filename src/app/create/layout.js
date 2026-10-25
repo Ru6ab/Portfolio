@@ -24,15 +24,15 @@ export default function DesignLayout({ children }) {
       {/* Mobile sidebar overlay */}
       {openMenu && (
         <div
-          className="fixed inset-0 z-40 bg-black bg-opacity-30 lg:hidden"
+          className="fixed inset-0 z-40  bg-opacity-30 lg:hidden"
           onClick={() => setOpenMenu(false)}
         />
       )}
 
       {/* Mobile sidebar */}
       <div
-        className={`fixed top-0 left-0 w-[80vw] md:w-[290px] lg:w-[285px] z-50 h-screen bg-[#010912] transform transition-transform duration-500 ease-linear lg:hidden ${
-          openMenu ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed top-0 left-0 w-[80vw] md:w-[290px] lg:w-[285px] z-50 h-screen bg-[#010912] transform transition-transform duration-700 ease-linear lg:hidden ${
+          openMenu ? 'translate-x-0 ' : '-translate-x-full'
         }`}
       >
         <Dashboard closeSidebar={() => setOpenMenu(false)} />

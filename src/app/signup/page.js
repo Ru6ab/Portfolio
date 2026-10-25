@@ -29,7 +29,7 @@ export default function Page() {
   };
 
   return (
-   <div className="flex items-center justify-center min-h-screen bg-gray-100">
+   <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
   <div className="p-6 max-w-md w-full bg-white shadow-lg rounded-xl">
     <h1 className="text-3xl font-bold mb-6 text-gray-800 text-center">
       Create Account
@@ -46,7 +46,7 @@ export default function Page() {
 
       <input
         name="password"
-        type="password"
+        type="text"
         placeholder="Password"
         value={formData.password}
         onChange={handleChange}
